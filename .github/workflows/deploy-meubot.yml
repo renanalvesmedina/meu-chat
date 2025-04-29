@@ -1,0 +1,54 @@
+name: Bot Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  TEAMSFX_ENV_NAME: dev
+  M365_TENANT_ID: ${{ secrets.M365_TENANT_ID }}
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Teams Toolkit
+        run: npm install -g @microsoft/teamsfx-cli
+
+      - name: Login to Microsoft 365
+        run: |
+          echo "${{ secrets.TEAMSFX_ACCOUNT_PWD }}" | teamsfx account login m365 --username "${{ secrets.TEAMSFX_ACCOUNT_NAME }}" --password
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build
+        run: |
+          dotnet restore
+          dotnet publish meu_chat.csproj -c Release -o ./publish
+
+      - name: Provision
+        run: teamsfx provision --env $TEAMSFX_ENV_NAME
+
+      - name: Deploy
+        run: teamsfx deploy --env $TEAMSFX_ENV_NAME
+
+      - name: Publish
+        run: teamsfx publish --env $TEAMSFX_ENV_NAME
