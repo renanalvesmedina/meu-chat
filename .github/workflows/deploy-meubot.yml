@@ -42,7 +42,7 @@ jobs:
 
       - name: Login Teams Toolkit CLI with Azure SP
         run: |
-          teamsapp auth login azure --service-principal true --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }} --interactive false
+          teamsapp auth login azure --service-principal true --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.M365_TENANT_ID }} --interactive false
   
       - name: Provision
         run: |
