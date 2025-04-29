@@ -35,16 +35,40 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Build
+      - name: Build dotnet
         run: |
           dotnet restore
           dotnet publish meu_chat.csproj -c Release -o ./publish
 
+      - name: Login Teams Toolkit CLI with Azure SP
+        run: |
+          teamsapp auth login azure --service-principal true --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }} --interactive false
+  
       - name: Provision
-        run: teamsapp provision --interactive false --env $TEAMSFX_ENV_NAME
+        run: |
+          teamsapp provision --env ${{ env.TEAMSFX_ENV_NAME }} --ignore-env-file true --interactive false
 
       - name: Deploy
-        run: teamsapp deploy --interactive false --env $TEAMSFX_ENV_NAME
+        run: teamsapp deploy --env $TEAMSFX_ENV_NAME
 
-      - name: Publish
-        run: teamsapp publish --interactive false --env $TEAMSFX_ENV_NAME
+      - name: Package
+        run: |
+          teamsapp package --env $TEAMSFX_ENV_NAME
+
+      - name: Install o365 cli
+        run: npm install -g @pnp/cli-microsoft365
+
+      - name: Login M365
+        run: m365 login --authType password --userName ${{ secrets.TEAMSFX_ACCOUNT_NAME }} --password ${{ secrets.TEAMSFX_ACCOUNT_PWD }} --tenantId ${{ secrets.M365_TENANT_ID }}
+      
+      - name: Publish or update Teams App
+        run: |
+          app=$(m365 teams app list --output json | jq '.[] | select(.externalId == "'"$APPID"'")')
+          if [ -z "$app" ]; then
+            echo "Publishing app..."
+            m365 teams app publish --filePath ./appPackage/build/appPackage.zip
+          else
+            appId=$(echo $app | jq -r '.id')
+            echo "Updating app $appId..."
+            m365 teams app update --id $appId --filePath ./appPackage/build/appPackage.zip
+          fi
