@@ -28,11 +28,7 @@ jobs:
           node-version: '18'
 
       - name: Install Teams Toolkit
-        run: npm install -g @microsoft/teamsfx-cli
-
-      - name: Login to Microsoft 365
-        run: |
-          echo "${{ secrets.TEAMSFX_ACCOUNT_PWD }}" | teamsfx account login m365 --username "${{ secrets.TEAMSFX_ACCOUNT_NAME }}" --password
+        run: npm install -g @microsoft/teamsapp-cli
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -45,10 +41,10 @@ jobs:
           dotnet publish meu_chat.csproj -c Release -o ./publish
 
       - name: Provision
-        run: teamsfx provision --env $TEAMSFX_ENV_NAME
+        run: teamsapp provision --env $TEAMSFX_ENV_NAME
 
       - name: Deploy
-        run: teamsfx deploy --env $TEAMSFX_ENV_NAME
+        run: teamsapp deploy --env $TEAMSFX_ENV_NAME
 
       - name: Publish
-        run: teamsfx publish --env $TEAMSFX_ENV_NAME
+        run: teamsapp publish --env $TEAMSFX_ENV_NAME
