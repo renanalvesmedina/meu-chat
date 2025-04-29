@@ -41,10 +41,10 @@ jobs:
           dotnet publish meu_chat.csproj -c Release -o ./publish
 
       - name: Provision
-        run: teamsapp provision --env $TEAMSFX_ENV_NAME
+        run: teamsapp provision --interactive false --env $TEAMSFX_ENV_NAME
 
       - name: Deploy
-        run: teamsapp deploy --env $TEAMSFX_ENV_NAME
+        run: teamsapp deploy --interactive false --env $TEAMSFX_ENV_NAME
 
       - name: Publish
-        run: teamsapp publish --env $TEAMSFX_ENV_NAME
+        run: teamsapp publish --interactive false --env $TEAMSFX_ENV_NAME
