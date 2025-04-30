@@ -7,7 +7,7 @@ on:
 
 env:
   TEAMSFX_ENV_NAME: dev
-  M365_TENANT_ID: ${{ secrets.M365_TENANT_ID }}
+  M365_TENANT_ID: "1905f3e7-ee16-4428-b996-4b87a06a1bc4"
 
 jobs:
   build-deploy:
@@ -42,7 +42,7 @@ jobs:
 
       - name: Login Teams Toolkit CLI with Azure SP
         run: |
-          teamsapp auth login azure --service-principal true --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.M365_TENANT_ID }} --interactive false
+          teamsapp auth login azure --service-principal true --username "450d825e-fecc-4a97-a9bb-23e35c59ba32" --password "8HxpGDjts9xSzELiDOP7Vq6.gu3CTJq-G0" --tenant "1905f3e7-ee16-4428-b996-4b87a06a1bc4" --interactive false
   
       - name: Provision
         run: |
@@ -59,7 +59,7 @@ jobs:
         run: npm install -g @pnp/cli-microsoft365
 
       - name: Login M365
-        run: m365 login --authType password --userName ${{ secrets.TEAMSFX_ACCOUNT_NAME }} --password ${{ secrets.TEAMSFX_ACCOUNT_PWD }} --tenantId ${{ secrets.M365_TENANT_ID }}
+        run: m365 login --authType password --userName "renan@n3tecnologia.com" --password "llsxgzcjvcnfvdqf" --tenantId "1905f3e7-ee16-4428-b996-4b87a06a1bc4"
       
       - name: Publish or update Teams App
         run: |
