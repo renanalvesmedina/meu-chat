@@ -42,7 +42,7 @@ jobs:
 
       - name: Login Teams Toolkit CLI with Azure SP
         run: |
-          teamsapp auth login azure --service-principal true --username "450d825e-fecc-4a97-a9bb-23e35c59ba32" --password "8HxpGDjts9xSzELiDOP7Vq6.gu3CTJq-G0" --tenant "1905f3e7-ee16-4428-b996-4b87a06a1bc4" --interactive false
+          teamsapp auth login azure --service-principal true --username "jEC8Q~A4ny4WmYIWrq70JG~wFD6ZwiXrD2rs4a7j" --password "8HxpGDjts9xSzELiDOP7Vq6.gu3CTJq-G0" --tenant "1905f3e7-ee16-4428-b996-4b87a06a1bc4" --interactive false
   
       - name: Provision
         run: |
